@@ -65,9 +65,7 @@ public class DataWedgePlugin extends Plugin {
         registerResultReceiver();
         
         // Detect DataWedge version on load
-        if (isDataWedgeInstalled()) {
-            detectDataWedgeVersion();
-        }
+        detectDataWedgeVersion();
     }
 
     @PluginMethod
@@ -1088,9 +1086,13 @@ public class DataWedgePlugin extends Plugin {
         // Store pending call
         pendingSoftRfidCall = call;
         
+        // Get action: TOGGLE_SCANNING, START_SCANNING, STOP_SCANNING
+        String action = call.getString("action");
+        Log.d(TAG, "SoftRfidTrigger action: " + action);
+        
         Intent i = new Intent();
         i.setAction("com.symbol.datawedge.api.ACTION");
-        i.putExtra("com.symbol.datawedge.api.SOFT_RFID_TRIGGER", "TOGGLE");
+        i.putExtra("com.symbol.datawedge.api.SOFT_RFID_TRIGGER", action);
         getContext().sendBroadcast(i);
         
         Log.d(TAG, "Triggered RFID scan");

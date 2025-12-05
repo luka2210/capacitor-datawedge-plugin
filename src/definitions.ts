@@ -328,7 +328,7 @@ export interface DataWedgePlugin {
    * Trigger RFID scanning programmatically
    * @requires DataWedge 7.0+
    */
-  softRfidTrigger(): Promise<ScanResult>;
+  softRfidTrigger(action: 'TOGGLE_SCANNING' | 'START_SCANNING' | 'STOP_SCANNING'): Promise<ScanResult>;
 
   /**
    * Trigger barcode scanning programmatically
