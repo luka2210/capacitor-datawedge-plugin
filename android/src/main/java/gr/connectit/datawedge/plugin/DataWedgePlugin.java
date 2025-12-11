@@ -1076,7 +1076,7 @@ public class DataWedgePlugin extends Plugin {
     }
     
     @PluginMethod
-    public void softRfidTrigger(PluginCall call) {
+    public void softRfidTriggerStart(PluginCall call) {
         // Check version compatibility
         if (detectedVersion != null && !detectedVersion.isAtLeast(7, 0)) {
             call.reject("softRfidTrigger requires DataWedge 7.0 or higher");
@@ -1086,20 +1086,35 @@ public class DataWedgePlugin extends Plugin {
         // Store pending call
         pendingSoftRfidCall = call;
         
-        // Get action: TOGGLE_SCANNING, START_SCANNING, STOP_SCANNING
-        String action = call.getString("action");
-        Log.d(TAG, "SoftRfidTrigger action: " + action);
+        Intent i = new Intent();
+        i.setAction("com.symbol.datawedge.api.ACTION");
+        i.putExtra("com.symbol.datawedge.api.SOFT_RFID_TRIGGER", "TOGGLE_SCANNING");
+        getContext().sendBroadcast(i);
+        
+        Log.d(TAG, "Triggered RFID scan");
+    }
+
+    @PluginMethod
+    public void softRfidTriggerStart(PluginCall call) {
+        // Check version compatibility
+        if (detectedVersion != null && !detectedVersion.isAtLeast(7, 0)) {
+            call.reject("softRfidTrigger requires DataWedge 7.0 or higher");
+            return;
+        }
+        
+        // Store pending call
+        pendingSoftRfidCall = call; // should i do this?
         
         Intent i = new Intent();
         i.setAction("com.symbol.datawedge.api.ACTION");
-        i.putExtra("com.symbol.datawedge.api.SOFT_RFID_TRIGGER", action);
+        i.putExtra("com.symbol.datawedge.api.SOFT_RFID_TRIGGER", "STOP_SCANNING");
         getContext().sendBroadcast(i);
         
         Log.d(TAG, "Triggered RFID scan");
     }
     
     @PluginMethod
-    public void softScanTrigger(PluginCall call) {
+    public void softScanTriggerStop(PluginCall call) {
         // Store pending call
         pendingSoftScanCall = call;
         

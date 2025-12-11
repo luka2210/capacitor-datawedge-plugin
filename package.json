@@ -6,12 +6,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/maxilosgr/capacitor-datawedge-plugin.git"
+    "url": "git+https://github.com/luka2210/capacitor-datawedge-plugin.git"
   },
   "bugs": {
-    "url": "https://github.com/maxilosgr/capacitor-datawedge-plugin/issues"
+    "url": "https://github.com/luka2210/capacitor-datawedge-plugin/issues"
   },
-  "homepage": "https://github.com/maxilosgr/capacitor-datawedge-plugin#readme",
+  "homepage": "https://github.com/luka2210/capacitor-datawedge-plugin#readme",
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
