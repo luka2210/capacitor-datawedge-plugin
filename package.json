@@ -1,6 +1,6 @@
 {
-  "name": "capacitor-datawedge-plugin",
-  "version": "1.0.2",
+  "name": "@vodena/capacitor-datawedge-plugin",
+  "version": "1.0.0",
   "description": "Capacitor plugin for Zebra DataWedge - Complete Android implementation with 35+ API methods",
   "author": "Luka Momčilović - Vodéna d.o.o.",
   "license": "MIT",
@@ -64,6 +64,9 @@
   },
   "peerDependencies": {
     "@capacitor/core": "^7.0.0"
+  },
+  "publishConfig": {
+    "registry": "http://89.216.29.71:30002/"
   },
   "prettier": "@ionic/prettier-config",
   "eslintConfig": {
