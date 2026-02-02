@@ -31,3 +31,6 @@ temp/
 
 # ESLint
 .eslintignore
+
+# Gradle files
+android/.gradle/

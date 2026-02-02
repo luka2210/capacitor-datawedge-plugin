@@ -14,12 +14,14 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
+
 import gr.connectit.datawedge.plugin.DataWedgeVersion.DataWedgeFeature;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 @CapacitorPlugin(name = "DataWedge")
@@ -462,33 +464,36 @@ public class DataWedgePlugin extends Plugin {
             call.reject("Profile name is required");
             return;
         }
-        
+
         // Check version compatibility
         if (detectedVersion != null && !detectedVersion.isAtLeast(6, 5)) {
             call.reject("getConfig requires DataWedge 6.5 or higher");
             return;
         }
-        
+
         // Store pending call
         pendingConfigCall = call;
-        
-        // Create the intent
-        Intent i = new Intent();
-        i.setAction("com.symbol.datawedge.api.ACTION");
-        
+
+        // Create proper bundles for the intent
         Bundle bConfig = new Bundle();
-        bConfig.putString("PROFILE_NAME", profileName);
-        
-        // Get config type if specified
+        Bundle bMain = new Bundle();
+        bMain.putString("PROFILE_NAME", profileName);
+        ArrayList<String> pluginName = new ArrayList<>();
+        // Request specific plugin config if provided
         String configType = call.getString("configType");
         if (configType != null) {
-            bConfig.putString("CONFIG_MODE", configType);
+          pluginName.add(configType);
         }
-        
-        i.putExtra("com.symbol.datawedge.api.GET_CONFIG", bConfig);
+
+        bConfig.putStringArrayList("PLUGIN_NAME", pluginName);
+        bMain.putBundle("PLUGIN_CONFIG", bConfig);
+
+        Intent i = new Intent();
+        i.setAction("com.symbol.datawedge.api.ACTION");
+        i.putExtra("com.symbol.datawedge.api.GET_CONFIG", bMain);
         getContext().sendBroadcast(i);
-        
-        Log.d(TAG, "Requested config for profile: " + profileName);
+
+        Log.d(TAG, "Requested config for profile: " + profileName + ", plugin: " + pluginName);
     }
 
     @PluginMethod
@@ -1095,7 +1100,7 @@ public class DataWedgePlugin extends Plugin {
     }
 
     @PluginMethod
-    public void softRfidTriggerStart(PluginCall call) {
+    public void softRfidTriggerStop(PluginCall call) {
         // Check version compatibility
         if (detectedVersion != null && !detectedVersion.isAtLeast(7, 0)) {
             call.reject("softRfidTrigger requires DataWedge 7.0 or higher");
@@ -1103,7 +1108,7 @@ public class DataWedgePlugin extends Plugin {
         }
         
         // Store pending call
-        pendingSoftRfidCall = call; // should i do this?
+        pendingSoftRfidCall = call;
         
         Intent i = new Intent();
         i.setAction("com.symbol.datawedge.api.ACTION");
@@ -1799,7 +1804,43 @@ public class DataWedgePlugin extends Plugin {
                 jsObject.put(key, (Double) value);
             } else if (value instanceof Bundle) {
                 jsObject.put(key, bundleToJSObject((Bundle) value));
+            } else if (value instanceof Bundle[]) {
+            // Handle Bundle array (like PLUGIN_CONFIG)
+                JSONArray array = new JSONArray();
+                Bundle[] bundles = (Bundle[]) value;
+                for (Bundle b : bundles) {
+                    array.put(bundleToJSObject(b));
+                }
+                jsObject.put(key, array);
+            } else if (value instanceof ArrayList) {
+                // Handle ArrayList (check if it contains Bundles)
+                JSONArray array = new JSONArray();
+                ArrayList<?> list = (ArrayList<?>) value;
+                for (Object item : list) {
+                    if (item instanceof Bundle) {
+                        array.put(bundleToJSObject((Bundle) item));
+                    } else {
+                        array.put(item);
+                    }
+                }
+                jsObject.put(key, array);
+            } else if (value instanceof String[]) {
+                String[] strings = (String[]) value;
+                JSONArray array = new JSONArray();
+                for (String s : strings) {
+                    array.put(s);
+                }
+                jsObject.put(key, array);
+            } else if (value instanceof int[]) {
+                int[] ints = (int[]) value;
+                JSONArray array = new JSONArray();
+                for (int i : ints) {
+                    array.put(i);
+                }
+                jsObject.put(key, array);
             } else if (value != null) {
+                // Fallback for unknown types
+                Log.d(TAG, "Unknown type for key " + key + ": " + value.getClass().getName());
                 jsObject.put(key, value.toString());
             }
         }
