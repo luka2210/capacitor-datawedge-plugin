@@ -53,7 +53,8 @@ Clone and run: `git clone https://github.com/maxilosgr/capacitor-datawedge-plugi
 - `enableDatawedge()` / `disableDatawedge()` - Control DataWedge service
 - `enableScannerInput()` / `disableScannerInput()` - Control scanner input
 - `softScanTrigger()` - Trigger barcode scan programmatically
-- `softRfidTrigger()` - Trigger RFID scan programmatically
+- `softRfidTriggerStart()` - Start RFID scan programmatically
+- `softRfidTriggerStop()` - Stop RFID scan programmatically
 - `switchToProfile()` - Switch active profile
 - `switchScanner()` - Change active scanner
 - `switchScannerParams()` - Temporarily modify scanner settings

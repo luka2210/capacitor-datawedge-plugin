@@ -1119,7 +1119,7 @@ public class DataWedgePlugin extends Plugin {
     }
     
     @PluginMethod
-    public void softScanTriggerStop(PluginCall call) {
+    public void softScanTrigger(PluginCall call) {
         // Store pending call
         pendingSoftScanCall = call;
         

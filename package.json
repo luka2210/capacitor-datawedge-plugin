@@ -1,6 +1,6 @@
 {
   "name": "@vodena/capacitor-datawedge-plugin",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Capacitor plugin for Zebra DataWedge - Complete Android implementation with 35+ API methods",
   "author": "Luka Momčilović - Vodéna d.o.o.",
   "license": "MIT",
